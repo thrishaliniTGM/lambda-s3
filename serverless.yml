@@ -32,11 +32,11 @@ functions:
     environment:
       FILE_UPLOAD_BUCKET_NAME: tgm-general
 
-resources:
-  Resources:
-    FileBucket:
-      Type: AWS::S3::Bucket
-      Properties:
-        BucketName: tgm-general
-        AccessControl: PublicRead
+# resources:
+#   Resources:
+#     FileBucket:
+#       Type: AWS::S3::Bucket
+#       Properties:
+#         BucketName: tgm-general
+#         AccessControl: PublicRead
 

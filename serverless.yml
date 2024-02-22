@@ -49,9 +49,9 @@ plugins:
   - serverless-iam-roles-per-function
 
 functions:
-  s3FileUploder:
+  s3ImageUploder:
     handler: src/upload.handler
-    name: s3-file-uploader
+    name: s3-image-uploader
     timeout: 60
     memory: 128
     events:

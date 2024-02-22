@@ -7,8 +7,8 @@ provider:
   stage: dev
   region: eu-north-1
 
-custom:
-  fileUploadBucketName: ${self:service}-bucket-${self:provider.stage}
+# custom:
+#   fileUploadBucketName: ${self:service}-bucket-${self:provider.stage}
 
 plugins:
   - serverless-iam-roles-per-function
@@ -28,15 +28,15 @@ functions:
       - Effect: Allow
         Action:
           - "s3:Put*"
-        Resource: arn:aws:s3:::${self:custom.fileUploadBucketName}/*
+        Resource: arn:aws:s3:::tgm-general/*
     environment:
-      FILE_UPLOAD_BUCKET_NAME: ${self:custom.fileUploadBucketName}
+      FILE_UPLOAD_BUCKET_NAME: tgm-general
 
 resources:
   Resources:
     FileBucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: ${self:custom.fileUploadBucketName}
+        BucketName: tgm-general
         AccessControl: PublicRead
 

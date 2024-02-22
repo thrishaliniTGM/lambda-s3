@@ -31,6 +31,40 @@ functions:
         Resource: arn:aws:s3:::tgm-general/*
     environment:
       FILE_UPLOAD_BUCKET_NAME: tgm-general
+  s3ImageGet:
+    handler: src/get.handler
+    name: s3-Image-get
+    description: A lambda handler that gets all files on an S3 bucket based on an API Gateway trigger.
+    timeout: 60 
+    memorySize: 128 
+    events:
+      - http:
+          path: file/{fileKey}
+          method: GET
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - "s3:Get*"
+        Resource: arn:aws:s3:::tgm-general/*
+    environment:
+      FILE_UPLOAD_BUCKET_NAME: tgm-general
+  s3ImageDelete:
+    handler: src/delete.handler
+    name: s3-Image-delete
+    description: A lambda handler that deletes a file on an S3 bucket based on an API Gateway trigger.
+    timeout: 60 
+    memorySize: 128 
+    events:
+      - http:
+          path: file/{fileKey}
+          method: DELETE
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - "s3:DeleteObject"
+        Resource: arn:aws:s3:::tgm-general/*
+    environment:
+      FILE_UPLOAD_BUCKET_NAME: tgm-general
 
 # resources:
 #   Resources:

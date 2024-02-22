@@ -1,6 +1,6 @@
 
 
-service: lambda-s3
+service: lambda-s3-image-upload
 
 # frameworkVersion: "3"
 

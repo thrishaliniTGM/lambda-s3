@@ -9,6 +9,8 @@ provider:
   runtime: nodejs18.x
   stage: dev
   region: eu-north-1
+  # iamRoleStatements:
+
 
 # you can add statements to the Lambda function's IAM Role here
 #  iam:
@@ -40,9 +42,46 @@ provider:
 #    - include-me.js
 #    - include-me-dir/**
 
+custom:
+  fileUploadBucketName: ${self:service}-bucket-${self:provider.stage}
+
+plugins:
+  - serverless-iam-roles-per-function
+
 functions:
-  hello:
-    handler: src/handler.hello
+  s3FileUploder:
+    handler: src/upload.handler
+    name: s3-file-uploader
+    timeout: 60
+    memory: 128
+    events:
+      - http :
+        path: images
+        method: POST
+    iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - "s3:Put*"
+        Resource: arn:aws:s3:::${self.custom.fileUploadBucketName}
+      environment: 
+      FILE_UPLOAD_BUCKET_NAME:  ${self:custom.fileUploadBucketName}
+
+resources:
+  Resources:
+    FileBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.fileUploadBucketName}
+        AccessControl: PublicRead
+        # have to change access control later
+
+
+
+# functions:
+#   hello:
+#     handler: src/handler.hello
+
+
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details

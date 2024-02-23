@@ -39,7 +39,7 @@ functions:
     memorySize: 128 
     events:
       - http:
-          path: file/{fileKey}
+          path: images/{imageKey}
           method: GET
     iamRoleStatements:
       - Effect: Allow
@@ -56,7 +56,7 @@ functions:
     memorySize: 128 
     events:
       - http:
-          path: file/{fileKey}
+          path: images/{imageKey}
           method: DELETE
     iamRoleStatements:
       - Effect: Allow

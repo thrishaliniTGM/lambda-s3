@@ -34,12 +34,12 @@ functions:
   s3ImageGet:
     handler: src/get.handler
     name: s3-Image-get
-    description: A lambda handler that gets all files on an S3 bucket based on an API Gateway trigger.
+    description: A lambda handler that gets a file on an S3 bucket based on an API Gateway trigger.
     timeout: 60 
     memorySize: 128 
     events:
       - http:
-          path: images/{imageKey}
+          path: /{imageKey}
           method: GET
     iamRoleStatements:
       - Effect: Allow
@@ -56,7 +56,7 @@ functions:
     memorySize: 128 
     events:
       - http:
-          path: images/{imageKey}
+          path: /{imageKey}
           method: DELETE
     iamRoleStatements:
       - Effect: Allow

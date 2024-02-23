@@ -24,7 +24,7 @@ module.exports.handler =async(event) =>{
         console.error(e);
         response.body = JSON.stringify({message:"Error in file retrival from s3", errorMessage : e });
         response.status = 500;
-    }
+    };
 
     return response;
 };

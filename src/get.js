@@ -21,7 +21,7 @@ module.exports.handler =async(event) =>{
         };
         const url = s3.getSignedUrl('getObject',params)
         // const signedUrl = await s3.getSignedUrlPromise('getObject', params);
-        response.body = JSON.stringify({ message: "Successfully retrived image from S3", signedUrl });
+        response.body = JSON.stringify({ message: "Successfully retrived image from S3", url });
     }
     catch(e){
         console.error(e);

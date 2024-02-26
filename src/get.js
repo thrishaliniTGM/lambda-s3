@@ -19,7 +19,7 @@ module.exports.handler =async(event) =>{
             Key: key,
             Expires: signedUrlExpireSeconds// URL expiration time in seconds (1 hour in this case)
         };
-        const url = s3.getSignedUrl('putObject',params)
+        const url = s3.getSignedUrl('getObject',params)
         // const signedUrl = await s3.getSignedUrlPromise('getObject', params);
         response.body = JSON.stringify({ message: "Successfully retrived image from S3", signedUrl });
     }

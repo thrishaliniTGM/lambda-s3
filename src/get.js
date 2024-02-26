@@ -8,6 +8,7 @@ module.exports.handler =async(event) =>{
     const response = {
         isBase64Encoded: false,
         statusCode :200,
+        Expires: 10
     };
 
     try{
@@ -16,7 +17,8 @@ module.exports.handler =async(event) =>{
             Key: decodeURIComponent(event.pathParameters.imageKey),
 
         };
-        const getResult = await s3.getObject(params).promise();
+    
+        const getResult =  await s3.getSignedUrlPromise('getObject', params);
         response.body = JSON.stringify({message:"Successfully retrived file from s3",getResult});
         
     }

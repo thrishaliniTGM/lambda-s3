@@ -8,17 +8,19 @@ module.exports.handler =async(event) =>{
     const response = {
         isBase64Encoded: false,
         statusCode :200,
-        Expires: 360
+        // Expires: 360
     };
 
     try {
         const key = decodeURIComponent(event.pathParameters.imageKey);
+        const signedUrlExpireSeconds = 60*3 ;
         const params = {
             Bucket: BUCKET_NAME,
             Key: key,
-            Expires: 3600 // URL expiration time in seconds (1 hour in this case)
+            Expires: signedUrlExpireSeconds// URL expiration time in seconds (1 hour in this case)
         };
-        const signedUrl = await s3.getSignedUrlPromise('getObject', params);
+        const url = s3.getSignedUrl('putObject',params)
+        // const signedUrl = await s3.getSignedUrlPromise('getObject', params);
         response.body = JSON.stringify({ message: "Successfully retrived image from S3", signedUrl });
     }
     catch(e){

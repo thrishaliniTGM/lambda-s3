@@ -11,16 +11,15 @@ module.exports.handler =async(event) =>{
         Expires: 360
     };
 
-    try{
+    try {
+        const key = decodeURIComponent(event.pathParameters.imageKey);
         const params = {
             Bucket: BUCKET_NAME,
-            Key: decodeURIComponent(event.pathParameters.imageKey),
-
+            Key: key,
+            Expires: 3600 // URL expiration time in seconds (1 hour in this case)
         };
-    
-        const getResult =  await s3.getSignedUrlPromise('getObject', params);
-        response.body = JSON.stringify({message:"Successfully retrived file from s3",getResult});
-        
+        const signedUrl = await s3.getSignedUrlPromise('getObject', params);
+        response.body = JSON.stringify({ message: "Successfully retrived image from S3", signedUrl });
     }
     catch(e){
         console.error(e);

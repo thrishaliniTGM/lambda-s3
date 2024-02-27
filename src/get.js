@@ -14,7 +14,7 @@ module.exports.handler = async (event) => {
   try {
     const token = event.headers.Authorization;
     const decodedToken = jwt.verify(token, SECRET_KEY);
-    if (decodedToken) {
+    if (decodedToken.payload == "data") {
       try {
         const key = decodeURIComponent(event.pathParameters.imageKey);
         const signedUrlExpireSeconds = 60 * 3;
@@ -37,6 +37,12 @@ module.exports.handler = async (event) => {
         });
         response.status = 500;
       }
+    }
+    else{
+        response.body = JSON.stringify({
+            message: "authentication fail"
+          });
+          response.status = 401;
     }
   } catch (error) {
     response.body = JSON.stringify({

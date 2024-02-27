@@ -11,46 +11,54 @@ module.exports.handler = async (event) => {
     statusCode: 200,
     // Expires: 360
   };
-  try {
+  const verifyToken = (token, secretKey) => {
+    return new Promise((resolve, reject) => {
+        jwt.verify(token, secretKey, (err, decoded) => {
+                if (err) {
+                    reject(err); // If verification fails, reject the Promise with the error
+                } else {
+                    resolve(decoded); // If verification succeeds, resolve the Promise with the decoded token payload
+                }
+            });
+        });
+    };
     const token = event.headers.Authorization;
-    const decodedToken = jwt.verify(token, SECRET_KEY);
-    if (decodedToken.payload == "data") {
-      try {
-        const key = decodeURIComponent(event.pathParameters.imageKey);
-        const signedUrlExpireSeconds = 60 * 3;
-        const params = {
-          Bucket: BUCKET_NAME,
-          Key: key,
-          Expires: signedUrlExpireSeconds,
-        };
-        const url = s3.getSignedUrl("getObject", params);
-        // const signedUrl = await s3.getSignedUrlPromise('getObject', params);
+    verifyToken(token, SECRET_KEY)
+    .then(decodedToken => {
+        console.log('Token verification succeeded:', decodedToken);
+            try {
+              const key = decodeURIComponent(event.pathParameters.imageKey);
+              const signedUrlExpireSeconds = 60 * 3;
+              const params = {
+                Bucket: BUCKET_NAME,
+                Key: key,
+                Expires: signedUrlExpireSeconds,
+              };
+              const url = s3.getSignedUrl("getObject", params);
+              // const signedUrl = await s3.getSignedUrlPromise('getObject', params);
+              response.body = JSON.stringify({
+                message: "Successfully retrived image from S3",
+                url,
+              });
+            } catch (e) {
+              console.error(e);
+              response.body = JSON.stringify({
+                message: "Error in file retrival from s3",
+                errorMessage: e,
+              });
+              response.status = 500;
+            }
+          
+    })
+    .catch(error => {
         response.body = JSON.stringify({
-          message: "Successfully retrived image from S3",
-          url,
-        });
-      } catch (e) {
-        console.error(e);
-        response.body = JSON.stringify({
-          message: "Error in file retrival from s3",
-          errorMessage: e,
-        });
-        response.status = 500;
-      }
-    }
-    else{
-        response.body = JSON.stringify({
-            message: "authentication fail"
+            message: "authentication fail",
+            errorMessage: error,
           });
           response.status = 401;
-    }
-  } catch (error) {
-    response.body = JSON.stringify({
-      message: "authentication fail",
-      error: error,
     });
-    response.status = 401;
-  }
+
+   
 
   return response;
 };

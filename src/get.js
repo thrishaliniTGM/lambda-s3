@@ -12,10 +12,10 @@ module.exports.handler =async(event) =>{
     };
 
     try {
-        const token = event.headers.Authorization;
-        const decodedToken = jwt.verify(token, SECRET_KEY);
+        // const token = event.headers.Authorization;
+        // const decodedToken = jwt.verify(token, SECRET_KEY);
 
-        if (decodedToken){
+        // if (decodedToken){
         const key = decodeURIComponent(event.pathParameters.imageKey);
         const signedUrlExpireSeconds = 60*3 ;
         const params = {
@@ -27,14 +27,14 @@ module.exports.handler =async(event) =>{
         // const signedUrl = await s3.getSignedUrlPromise('getObject', params);
         response.body = JSON.stringify({ message: "Successfully retrived image from S3", url });
     }
-    else{
+    // else{
         
 
-            response.statusCode = 401;
-            response.body = JSON.stringify({ message: "Unauthorized" });
+    //         response.statusCode = 401;
+    //         response.body = JSON.stringify({ message: "Unauthorized" });
         
-    }
-    }
+    // }
+    // }
     catch(e){
         console.error(e);
         response.body = JSON.stringify({message:"Error in file retrival from s3", errorMessage : e });

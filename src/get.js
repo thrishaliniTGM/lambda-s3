@@ -1,5 +1,6 @@
 const AWS = require("aws-sdk");
 const s3 = new AWS.S3();
+const jwt = require("jsonwebtoken");
 
 const BUCKET_NAME = process.env.FILE_UPLOAD_BUCKET_NAME;
 const SECRET_KEY = "TGM-thrish";

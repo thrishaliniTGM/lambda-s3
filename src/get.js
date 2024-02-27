@@ -15,6 +15,11 @@ module.exports.handler = async (event) => {
     return new Promise((resolve, reject) => {
         jwt.verify(token, secretKey, (err, decoded) => {
                 if (err) {
+                    response.body = JSON.stringify({
+                        message: "authentication not available",
+                        errorMessage: error,
+                      });
+                      response.status = 401;
                     reject(err); // If verification fails, reject the Promise with the error
                 } else {
                     resolve(decoded); // If verification succeeds, resolve the Promise with the decoded token payload

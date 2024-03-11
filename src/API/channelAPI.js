@@ -143,7 +143,7 @@ exports.handler = async (event) => {
         switch (httpMethod) {
             case 'GET':
                if(path === '/channel'&& pathParameters.id){
-                    let channelId = path.id;
+                    let channelId = pathParameters.id;
                     response = await handleGetChannelById(channelId);
                 }
                 else if (path === '/channel') {

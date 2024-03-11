@@ -292,7 +292,7 @@ const query = async (sql) => {
     });
 };
 
-exports.handler = async (event) => {
+module.exports.handler = async (event) => {
     try {
         const { httpMethod, path,pathParameters, body } = event;
         console.log(event);

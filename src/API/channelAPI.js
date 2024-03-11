@@ -135,71 +135,6 @@
 const multer = require('multer');
 const connection = require('../components/rdsConnection');
 
-exports.handler = async (event) => {
-    try {
-        const { httpMethod, path,pathParameters, body } = event;
-        console.log(event);
-        let response;
-        switch (httpMethod) {
-            case 'GET':
-               if(path === '/channel'&& pathParameters.id){
-                    let channelId = pathParameters.id;
-                    response = await handleGetChannelById(channelId);
-                }
-                else if (path === '/channel') {
-                    response = await handleGetAllChannels();
-                } 
-                else if (path.startsWith('/channel/search')) {
-                    const searchTerm = body ? JSON.parse(body).searchTerm : null;
-                    response = await handleSearchChannel(searchTerm);
-                }
-                else{
-                    response = {
-                        statusCode: 500,
-                        body: JSON.stringify({ error: 'route Not present' })
-                    };
-                }
-                break;
-            case 'POST':
-                const { channelName, channelNumber } = JSON.parse(body);
-                response = await handlePostChannel(channelName, channelNumber);
-                break;
-                
-            case 'PUT':
-                const { id } = pathParameters;
-                const { channelName: putChannelName, channelNumber: putChannelNumber } = JSON.parse(body);
-                response = await handlePutChannel(id, putChannelName, putChannelNumber);
-                break;
-                
-            case 'PATCH':
-            
-                try {
-                    return await handlePatchChannelImage(event);
-                } catch (error) {
-                    console.error('Error:', error);
-                    return {
-                        statusCode: 500,
-                        body: JSON.stringify({ error: 'Internal Server Error' })
-                    };
-                }
-                
-            default:
-                response = {
-                    statusCode: 405,
-                    body: JSON.stringify({ error: 'Method Not Allowed' })
-                };
-        }
-
-        return response;
-    } catch (error) {
-        console.error('Error:', error);
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ error: 'Internal Server Error' })
-        };
-    }
-};
-
 const handleGetAllChannels = async () => {
     try {
         const results = await query('SELECT * FROM channel');
@@ -357,3 +292,67 @@ const query = async (sql) => {
     });
 };
 
+exports.handler = async (event) => {
+    try {
+        const { httpMethod, path,pathParameters, body } = event;
+        console.log(event);
+        let response;
+        switch (httpMethod) {
+            case 'GET':
+               if(path === '/channel'&& pathParameters.id){
+                    let channelId = pathParameters.id;
+                    response = await handleGetChannelById(channelId);
+                }
+                else if (path === '/channel') {
+                    response = await handleGetAllChannels();
+                } 
+                else if (path.startsWith('/channel/search')) {
+                    const searchTerm = body ? JSON.parse(body).searchTerm : null;
+                    response = await handleSearchChannel(searchTerm);
+                }
+                else{
+                    response = {
+                        statusCode: 500,
+                        body: JSON.stringify({ error: 'route Not present' })
+                    };
+                }
+                break;
+            case 'POST':
+                const { channelName, channelNumber } = JSON.parse(body);
+                response = await handlePostChannel(channelName, channelNumber);
+                break;
+                
+            case 'PUT':
+                const { id } = pathParameters;
+                const { channelName: putChannelName, channelNumber: putChannelNumber } = JSON.parse(body);
+                response = await handlePutChannel(id, putChannelName, putChannelNumber);
+                break;
+                
+            case 'PATCH':
+            
+                try {
+                    return await handlePatchChannelImage(event);
+                } catch (error) {
+                    console.error('Error:', error);
+                    return {
+                        statusCode: 500,
+                        body: JSON.stringify({ error: 'Internal Server Error' })
+                    };
+                }
+                
+            default:
+                response = {
+                    statusCode: 405,
+                    body: JSON.stringify({ error: 'Method Not Allowed' })
+                };
+        }
+
+        return response;
+    } catch (error) {
+        console.error('Error:', error);
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ error: 'Internal Server Error' })
+        };
+    }
+};

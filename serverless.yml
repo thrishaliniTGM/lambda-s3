@@ -95,6 +95,11 @@ functions:
       - http:
           path: channel/{id}
           method: PATCH
+    iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - "rds-data:ExecuteStatement"
+      Resource: "arn:aws:rds-db:eu-north-1:381492175278:dbuser:tgm/admin"
 
 # resources:
 #   Resources:

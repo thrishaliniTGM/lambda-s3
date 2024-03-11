@@ -36,7 +36,7 @@ connection.connect(function(err) {
         }
     });
 
-    connection.query('CREATE TABLE IF NOT EXISTS program ( id INT AUTO_INCREMENT PRIMARY KEY, programName VARCHAR(255) NOT NULL, videoUrl VARCHAR(255) NOT NULL, image BLOB);', (error) => {
+    connection.query('CREATE TABLE IF NOT EXISTS program ( id INT AUTO_INCREMENT PRIMARY KEY, programName VARCHAR(255) NOT NULL, videoUrl VARCHAR(255) NOT NULL);', (error) => {
         if (error) {
             console.error('Error creating program table:', error);
         } else {
@@ -44,7 +44,7 @@ connection.connect(function(err) {
         }
     });
     
-    connection.query('CREATE TABLE IF NOT EXISTS playlist ( id INT AUTO_INCREMENT PRIMARY KEY, playlistName VARCHAR(255) NOT NULL, position INT NOT NULL, programId INT, userId INT, FOREIGN KEY (programId) REFERENCES program(id), FOREIGN KEY (userId) REFERENCES user(id));', (error) => {
+    connection.query('CREATE TABLE IF NOT EXISTS playlist ( id INT AUTO_INCREMENT PRIMARY KEY, playlistName VARCHAR(255) NOT NULL, position INT NOT NULL, programId INT, userId INT, FOREIGN KEY (programId) REFERENCES program(id));', (error) => {
         if (error) {
             console.error('Error creating playlist table:', error);
         } else {
@@ -79,6 +79,65 @@ app.get('/playlist', (req, res) => {
     });
 });
 
+app.patch('/program/:programId', (req, res) => {
+    const programId = req.params.programId;
+    const { programName, videoUrl } = req.body;
+
+    if (!programName && !videoUrl) {
+        return res.status(400).json({ error: "At least one of programName or videoUrl is required for update" });
+    }
+
+    const programData = {};
+    if (programName) {
+        programData.programName = programName;
+    }
+    if (videoUrl) {
+        programData.videoUrl = videoUrl;
+    }
+
+    connection.query('UPDATE program SET ? WHERE id = ?', [programData, programId], (error, results) => {
+        if (error) {
+            console.error('Error updating program:', error);
+            return res.status(500).json({ error: "Failed to update program" });
+        }
+        if (results.affectedRows === 0) {
+            return res.status(404).json({ error: "Program not found" });
+        }
+        console.log('Program updated successfully');
+        return res.status(200).json({ message: "Program updated successfully" });
+    });
+});
+
+app.patch('/playlist/:playlistId', (req, res) => {
+    const playlistId = req.params.playlistId;
+    const { playlistName, position } = req.body;
+
+    if (!playlistName && !position) {
+        return res.status(400).json({ error: "At least one of playlistName or position is required for update" });
+    }
+
+    const playlistData = {};
+    if (playlistName) {
+        playlistData.playlistName = playlistName;
+    }
+    if (position) {
+        playlistData.position = position;
+    }
+
+    connection.query('UPDATE playlist SET ? WHERE id = ?', [playlistData, playlistId], (error, results) => {
+        if (error) {
+            console.error('Error updating playlist:', error);
+            return res.status(500).json({ error: "Failed to update playlist" });
+        }
+        if (results.affectedRows === 0) {
+            return res.status(404).json({ error: "Playlist not found" });
+        }
+        console.log('Playlist updated successfully');
+        return res.status(200).json({ message: "Playlist updated successfully" });
+    });
+});
+
+
 app.get('/program', (req, res) => {
     connection.query('SELECT * FROM program', (error, results) => {
         if (error) {
@@ -106,15 +165,33 @@ app.get('/playlist/:playlistId', (req, res) => {
     });
 });
 
-app.patch('/program/:programId', (req, res) => {
+// app.get('/playlist/:userId', (req, res) => {
+//     const playlistId = req.body.playlistId;
+//     const userId = req.params.userId;
+//     connection.query('SELECT program.* FROM program JOIN playlist ON program.id = playlist.programId WHERE playlist.id = ? AND playlist.userId = ?', [playlistId ,userId], (error, results) => {
+//         if (error) {
+//             console.error('Error fetching programs for playlist:', error);
+//             return res.status(500).json({ error: "Failed to fetch programs for playlist" });
+//         }
+//         if (results.length === 0) {
+//             return res.status(404).json({ message: "No programs found for this playlist" });
+//         }
+//         return res.status(200).json(results);
+//     });
+// });
+
+
+
+app.patch('/playlist/:programId', (req, res) => {
     const programId = req.params.programId;
-    const newPlaylistId = req.body.PlaylistId;
-    connection.query('UPDATE playlist SET playlistId = ? WHERE programId = ?', [newPlaylistId, programId], (error, results) => {
+    const newPlaylistName = req.body.playlistName;
+    const newPosition = req.body.position;
+    connection.query('UPDATE playlist SET playlistName = ?,position = ? WHERE programId = ?', [newPlaylistName,newPosition, programId], (error, results) => {
         if (error) {
             console.error('Error updating program playlist:', error);
             return res.status(500).json({ error: "Failed to update program playlist" });
         }
-        if (results.affectedRows === 0) {
+        if (results.affectedRows === 0) { 
             return res.status(404).json({ message: "Program or playlist not found" });
         }
         return res.status(200).json({ message: "Program playlist updated successfully" });
@@ -122,26 +199,65 @@ app.patch('/program/:programId', (req, res) => {
 });
 
 
-app.get('/channel/:searchTerm', (req, res) => {
-    const searchTerm = req.params.searchTerm;
+// app.get('/channel/:searchTerm', (req, res) => {
+//     const searchTerm = req.params.searchTerm;
 
-    if (!searchTerm) {
-        return res.status(400).json({ error: "searchTerm parameter is required" });
+//     if (!searchTerm) {
+//         return res.status(400).json({ error: "searchTerm parameter is required" });
+//     }
+
+//     const sqlQuery = 'SELECT * FROM channel WHERE channelName REGEXP ? OR channelNumber REGEXP ?';
+//     const sqlParams = [searchTerm, searchTerm];
+
+//     connection.query(sqlQuery, sqlParams, (error, results) => {
+//         if (error) {
+//             console.error('Error fetching channels:', error);
+//             return res.status(500).json({ error: "Failed to fetch channels" });
+//         }
+//         return res.status(200).json(results);
+//     });
+// });
+
+app.post('/program', (req, res) => {
+    const { programName, videoUrl } = req.body;
+
+    if (!programName || !videoUrl) {
+        return res.status(400).json({ error: "programName and videoUrl are required" });
     }
 
-    const sqlQuery = 'SELECT * FROM channel WHERE channelName REGEXP ? OR channelNumber REGEXP ?';
-    const sqlParams = [searchTerm, searchTerm];
+    const programData = { programName, videoUrl};
 
-    connection.query(sqlQuery, sqlParams, (error, results) => {
+    connection.query('INSERT INTO program SET ?', programData, (error, results, fields) => {
         if (error) {
-            console.error('Error fetching channels:', error);
-            return res.status(500).json({ error: "Failed to fetch channels" });
+            console.error('Error inserting program:', error);
+            return res.status(500).json({ error: "Failed to add program" });
         }
-        return res.status(200).json(results);
+        console.log('Program added successfully');
+        return res.status(201).json({ message: "Program added successfully", programId: results.insertId });
     });
 });
 
-app.put('/upload/:channelId', upload.single('image'), async (req, res) => {
+app.post('/playlist', (req, res) => {
+    const { playlistName, position, programId, userId } = req.body;
+
+    if (!playlistName || !position || !programId || !userId) {
+        return res.status(400).json({ error: "playlistName, position, programId, and userId are required" });
+    }
+
+    const playlistData = { playlistName, position, programId, userId };
+
+    connection.query('INSERT INTO playlist SET ?', playlistData, (error, results, fields) => {
+        if (error) {
+            console.error('Error inserting playlist:', error);
+            return res.status(500).json({ error: "Failed to add playlist" });
+        }
+        console.log('playlist added successfully');
+        return res.status(201).json({ message: "playlist added successfully", playlistId: results.insertId });
+    });
+});
+
+
+app.patch('/upload/:channelId', upload.single('image'), async (req, res) => {
     try {
       const { channelId } = req.params;
       const imageData = req.file.buffer;

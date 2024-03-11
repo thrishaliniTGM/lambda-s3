@@ -36,6 +36,7 @@ functions:
         Resource: arn:aws:s3:::tgm-general/*
     environment:
       FILE_UPLOAD_BUCKET_NAME: tgm-general
+
   s3ImageGet:
     handler: src/get.handler
     name: s3-Image-get
@@ -53,6 +54,7 @@ functions:
         Resource: arn:aws:s3:::tgm-general/*
     environment:
       FILE_UPLOAD_BUCKET_NAME: tgm-general
+
   s3ImageDelete:
     handler: src/delete.handler
     name: s3-Image-delete
@@ -70,6 +72,29 @@ functions:
         Resource: arn:aws:s3:::tgm-general/*
     environment:
       FILE_UPLOAD_BUCKET_NAME: tgm-general
+  
+  channelApi:
+    handler: src/API/channelAPI.handler
+    name: Channel-api
+    description: A lambda handler for channel APIs.
+    timeout: 60
+    memorySize: 128
+    events:
+      - http:
+          path: channel
+          method: GET
+      - http:
+          path: channel/{id}
+          method: GET
+      - http:
+          path: channel
+          method: POST
+      - http:
+          path: channel/{id}
+          method: PUT
+      - http:
+          path: channel/{id}
+          method: PATCH
 
 # resources:
 #   Resources:

@@ -2,10 +2,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const multer =require('multer');
-
+const cors = require('cors');
 
 const app = express();
-const cors = require('cors');
+
 const port = 3000;
 
 app.use(bodyParser.json());

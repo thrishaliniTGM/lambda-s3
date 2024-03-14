@@ -184,7 +184,7 @@ functions:
 
   playlistPatchApi:
     handler: src/API/playlist/patch.handler
-    name: Playlist-Patch-Api
+    name: Playlist-patch-Api
     description: A lambda handler for patching playlist details.
     timeout: 100
     memorySize: 128
@@ -200,7 +200,7 @@ functions:
 
   playlistPostApi:
     handler: src/API/playlist/post.handler
-    name: Playlist-Post-Api
+    name: Playlist-post-Api
     description: A lambda handler for adding new playlist.
     timeout: 100
     memorySize: 128
@@ -216,7 +216,7 @@ functions:
 
   programGetApi:
     handler: src/API/program/get.handler
-    name: Playlist-Get-Api
+    name: Playlist-get-Api
     description: A lambda handler for getting all programs.
     timeout: 100
     memorySize: 128
@@ -232,7 +232,7 @@ functions:
 
   programPatchApi:
     handler: src/API/program/patch.handler
-    name: Playlist-Patch-Api
+    name: Program-Patch-Api
     description: A lambda handler for any change in program details.
     timeout: 100
     memorySize: 128
@@ -248,7 +248,7 @@ functions:
 
   programPostApi:
     handler: src/API/program/post.handler
-    name: Playlist-post-Api
+    name: Program-post-Api
     description: A lambda handler for adding a new program .
     timeout: 100
     memorySize: 128

@@ -1,156 +1,8 @@
 
-// const express = require('express');
-// const bodyParser = require('body-parser');
-// // const mysql = require('mysql');
-// const multer =require('multer');
-
-
-// const app = express();
-// const cors = require('cors');
-// const port = 3000;
-
-// app.use(bodyParser.json());
-// app.use(cors());
-
-// const upload = multer();
-
-// app.get('/channel', (req, res) => {
-//     connection.query('SELECT * FROM channel', (error, results) => {
-//         if (error) {
-//             console.error('Error fetching channel:', error);
-//             return res.status(500).json({ error: "Failed to fetch channel" });
-//         }
-//         return res.status(200).json(results);
-//     });
-//   });
-
-  
-// app.get('/channel/:id', (req, res) => {
-//     const channelId = req.params.id;
-  
-//     connection.query('SELECT * FROM channel WHERE id = ?', channelId, (error, results) => {
-//         if (error) {
-//             console.error('Error fetching channel:', error);
-//             return res.status(500).json({ error: "Failed to fetch channel" });
-//         }
-//         if (results.length === 0) {
-//             return res.status(404).json({ error: "channel not found" });
-//         }
-//         return res.status(200).json(results[0]);
-//     });
-//   });
-
-
-// app.get('/channel/search', (req, res) => {
-//     const searchTerm = req.body.searchTerm;
-
-//     if (!searchTerm) {
-//         return res.status(400).json({ error: "searchTerm parameter is required" });
-//     }
-
-//     const sqlQuery = 'SELECT * FROM channel WHERE channelName REGEXP ? OR channelNumber REGEXP ?';
-//     const sqlParams = [searchTerm, searchTerm];
-
-//     connection.query(sqlQuery, sqlParams, (error, results) => {
-//         if (error) {
-//             console.error('Error fetching channels:', error);
-//             return res.status(500).json({ error: "Failed to fetch channels" });
-//         }
-//         return res.status(200).json(results);
-//     });
-// });
-
-// app.post('/channel', (req, res) => {
-//     const { channelName, channelNumber } = req.body;
-
-//     if (!channelName || !channelNumber) {
-//         return res.status(400).json({ error: "channelName and channelNumber are required" });
-//     }
-
-//     const channelData = { channelName, channelNumber };
-
-//     connection.query('INSERT INTO channel SET ?', channelData, (error, results, fields) => {
-//         if (error) {
-//             console.error('Error inserting channel:', error);
-//             return res.status(500).json({ error: "Failed to add channel" });
-//         }
-//         console.log('channel added successfully');
-//         return res.status(201).json({ message: "channel added successfully", channelId: results.insertId });
-//     });
-// });
-
-// app.put('/channel/:id', (req, res) => {
-//     const channelId = req.params.id;
-//     const { channelName, channelNumber } = req.body;
-
-//     if (!channelName && !channelNumber) {
-//         return res.status(400).json({ error: "At least one of channelName or channelNumber is required for update" });
-//     }
-
-//     const channelData = {};
-//     if (channelName) {
-//         channelData.channelName = channelName;
-//     }
-//     if (channelNumber) {
-//         channelData.channelNumber = channelNumber;
-//     }
-
-//     connection.query('UPDATE channel SET ? WHERE id = ?', [channelData, channelId], (error, results) => {
-//         if (error) {
-//             console.error('Error updating channel:', error);
-//             return res.status(500).json({ error: "Failed to update channel" });
-//         }
-//         if (results.affectedRows === 0) {
-//             return res.status(404).json({ error: "channel not found" });
-//         }
-//         console.log('channel updated successfully');
-//         return res.status(200).json({ message: "channel updated successfully" });
-//     });
-// });
-
-// app.patch('/upload/:channelId', upload.single('image'), async (req, res) => {
-//     try {
-//       const { channelId } = req.params;
-//       const imageData = req.file.buffer;
-  
-//       connection.query('UPDATE channel SET image = ? WHERE id = ?', [imageData, channelId], (error, results) => {
-//         if (error) {
-//           console.error('Error updating channel:', error);
-//           return res.status(500).json({ error: "Failed to update channel" });
-//         }
-//         if (results.affectedRows === 0) {
-//           return res.status(404).json({ error: "Channel not found" });
-//         }
-//         console.log('Channel updated successfully');
-//         return res.status(200).json({ message: "Channel updated successfully" });
-//       });
-//     } catch (error) {
-//       console.error('Error uploading image:', error);
-//       return res.status(500).json({ error: "Failed to upload image" });
-//     }
-//   });
 
 
 const multer = require('multer');
 const connection = require('../components/rdsConnection');
-// const mysql = require('mysql');
-
-// const connection = mysql.createConnection({
-//     host: "tgm.c5k0kmyg2vmm.eu-north-1.rds.amazonaws.com",
-//     user: "admin",
-//     password: "germane123",
-//     port: 3306,
-//     database: "db"
-// });
-// connection.connect( (error)=>{  
-//     if (err) {
-//     console.error('Database connection failed: ' + err.stack);
-//     return;
-//     }
-    
-// console.log('Connected to database.')
-
-// });
 
 
 const handleGetAllChannels = async () => {
@@ -261,42 +113,42 @@ const handlePutChannel = async (id, channelName, channelNumber) => {
     }
 };
 
-// const handlePatchChannelImage = async (event) => {
-//     try {
-//         const { channelId } = event.pathParameters;
-//         const imageData = Buffer.from(event.body, 'base64'); 
+const handlePatchChannelImage = async (event) => {
+    try {
+        const { channelId } = event.pathParameters;
+        const imageData = Buffer.from(event.body, 'base64'); 
 
-//         const query = 'UPDATE channel SET image = ? WHERE id = ?';
-//         const params = [imageData, channelId];
+        const query = 'UPDATE channel SET image = ? WHERE id = ?';
+        const params = [imageData, channelId];
 
-//         connection.query(query, params, (error, results) => {
-//             if (error) {
-//                 console.error('Error updating channel:', error);
-//                 return {
-//                     statusCode: 500,
-//                     body: JSON.stringify({ error: "Failed to update channel" })
-//                 };
-//             }
-//             if (results.affectedRows === 0) {
-//                 return {
-//                     statusCode: 404,
-//                     body: JSON.stringify({ error: "Channel not found" })
-//                 };
-//             }
-//             console.log('Channel updated successfully');
-//             return {
-//                 statusCode: 200,
-//                 body: JSON.stringify({ message: "Channel updated successfully" })
-//             };
-//         });
-//     } catch (error) {
-//         console.error('Error uploading image:', error);
-//         return {
-//             statusCode: 500,
-//             body: JSON.stringify({ error: "Failed to upload image" })
-//         };
-//     }
-// };
+        connection.query(query, params, (error, results) => {
+            if (error) {
+                console.error('Error updating channel:', error);
+                return {
+                    statusCode: 500,
+                    body: JSON.stringify({ error: "Failed to update channel" })
+                };
+            }
+            if (results.affectedRows === 0) {
+                return {
+                    statusCode: 404,
+                    body: JSON.stringify({ error: "Channel not found" })
+                };
+            }
+            console.log('Channel updated successfully');
+            return {
+                statusCode: 200,
+                body: JSON.stringify({ message: "Channel updated successfully" })
+            };
+        });
+    } catch (error) {
+        console.error('Error uploading image:', error);
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ error: "Failed to upload image" })
+        };
+    }
+};
 
 const query = async (sql) => {
     return new Promise((resolve, reject) => {
@@ -313,75 +165,79 @@ const query = async (sql) => {
 module.exports.handler = async (event) => {
     try {
         const { httpMethod, path,pathParameters, body } = event;
-        // console.log(event);
-        let response;
-        response ={
-            event:event
-        }
-        return response;
-    }
-    catch(error){
-        return {
-            status:500,
-            error:error
-        }
-    }
-        // switch (httpMethod) {
-        //     case 'GET':
-        //        if(path === '/channel'&& pathParameters.id){
-        //             let channelId = pathParameters.id;
-        //             response = await handleGetChannelById(channelId);
-        //         }
-        //         else if (path === '/channel') {
-        //             response = await handleGetAllChannels();
-        //         } 
-        //         else if (path.startsWith('/channel/search')) {
-        //             const searchTerm = body ? JSON.parse(body).searchTerm : null;
-        //             response = await handleSearchChannel(searchTerm);
-        //         }
-        //         else{
-        //             response = {
-        //                 statusCode: 500,
-        //                 body: JSON.stringify({ error: 'route Not present' })
-        //             };
-        //         }
-        //         break;
-        //     case 'POST':
-        //         const { channelName, channelNumber } = JSON.parse(body);
-        //         response = await handlePostChannel(channelName, channelNumber);
-        //         break;
-                
-        //     case 'PUT':
-        //         const { id } = pathParameters;
-        //         const { channelName: putChannelName, channelNumber: putChannelNumber } = JSON.parse(body);
-        //         response = await handlePutChannel(id, putChannelName, putChannelNumber);
-        //         break;
-                
-        //     // case 'PATCH':
-            
-        //     //     try {
-        //     //         return await handlePatchChannelImage(event);
-        //     //     } catch (error) {
-        //     //         console.error('Error:', error);
-        //     //         return {
-        //     //             statusCode: 500,
-        //     //             body: JSON.stringify({ error: 'Internal Server Error' })
-        //     //         };
-        //     //     }
-                
-        //     default:
-        //         response = {
-        //             statusCode: 405,
-        //             body: JSON.stringify({ error: 'Method Not Allowed' })
-        //         };
-        // }
+        
+        console.log("Hi");
+        // let response;
+        // response = "Hello from AWS lambda function"
+        // return JSON.parse(response);
 
-    //     return response;
-    // } catch (error) {
-    //     console.error('Error:', error);
-    //     return {
-    //         statusCode: 500,
-    //         body: JSON.stringify({ errorMessage:error })
-    //     };
+        let response = {
+            statusCode: 200,
+            // body: JSON.stringify('Hello, World!'),
+            body: JSON.stringify(event),
+        };
+        // return response;
     // }
+    // catch(error){
+
+    //     console.log(error)
+    //     return {
+
+    //         status:500,
+    //         error:error
+    //     }
+    // }
+        switch (httpMethod) {
+            case 'GET':
+                if (path.startsWith("/channel/search")) {
+                    const searchTerm = body ? JSON.parse(body).searchTerm : null;
+                    response = await handleSearchChannel(searchTerm);
+                }
+               else if( pathParameters && pathParameters.id!="" ){
+                    let channelId = pathParameters.id;
+                    response = await handleGetChannelById(channelId);
+                }
+                else  {
+                    response = await handleGetAllChannels();
+                } 
+                
+                break;
+            case 'POST':
+                const { channelName, channelNumber } = JSON.parse(body);
+                response = await handlePostChannel(channelName, channelNumber);
+                break;
+                
+            case 'PUT':
+                const { id } = pathParameters;
+                const { channelName: putChannelName, channelNumber: putChannelNumber } = JSON.parse(body);
+                response = await handlePutChannel(id, putChannelName, putChannelNumber);
+                break;
+                
+            // case 'PATCH':
+            
+            //     try {
+            //         return await handlePatchChannelImage(event);
+            //     } catch (error) {
+            //         console.error('Error:', error);
+            //         return {
+            //             statusCode: 500,
+            //             body: JSON.stringify({ error: 'Internal Server Error' })
+            //         };
+            //     }
+                
+            default:
+                response = {
+                    statusCode: 405,
+                    body: JSON.stringify({ error: 'Method Not Allowed' })
+                };
+        }
+
+        return response;
+    } catch (error) {
+        console.error('Error:', error);
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ errorMessage: error })
+        };
+    }
 };

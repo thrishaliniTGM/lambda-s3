@@ -40,6 +40,7 @@ app.get('/playlist/:userId', (req, res) => {
         return res.status(200).json(results);
     });
 });
+
 app.patch('/playlist/:programId', (req, res) => {
     const programId = req.params.programId;
     const newPlaylistName = req.body.playlistName;

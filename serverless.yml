@@ -70,25 +70,217 @@ functions:
   #   environment:
   #     FILE_UPLOAD_BUCKET_NAME: tgm-general
   
-  channelApi:
-    handler: src/API/channelAPI.handler
-    name: Channel-api
-    description: A lambda handler for channel APIs.
-    timeout: 800
+  # channelGetAllApi:
+  #   handler: src/API/channel/get.handler
+  #   name: Channel-get-All-api
+  #   description: A lambda handler for channel get all channels API.
+  #   timeout: 100
+  #   memorySize: 128
+  #   events:
+  #     - http:
+  #         path: channel
+  #         method: GET
+  #   iamRoleStatements:
+  #     - Effect: Allow
+  #       Action:
+  #         - "rds-data:ExecuteStatement"
+  #       Resource: "arn:aws:rds-db:eu-north-1:381492175278:db:tgm"
+
+  # channelGetSpecificApi:
+  #   handler: src/API/channel/getSpecific.handler
+  #   name: Channel-get-specific-api
+  #   description: A lambda handler for channel get all specific API.
+  #   timeout: 100
+  #   memorySize: 128
+  #   events:
+  #     - http:
+  #         path: channel/{id}
+  #         method: GET
+  #   iamRoleStatements:
+  #     - Effect: Allow
+  #       Action:
+  #         - "rds-data:ExecuteStatement"
+  #       Resource: "arn:aws:rds-db:eu-north-1:381492175278:db:tgm"
+
+  channelGetSearchApi:
+    handler: src/API/channel/search.handler
+    name: Channel-get-searchResult-api
+    description: A lambda handler for searching though the list of channels .
+    timeout: 100
+    memorySize: 128
+    events:
+      - http:
+          path: channel/search/{searchTerm}
+          method: GET
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - "rds-data:ExecuteStatement"
+        Resource: "arn:aws:rds-db:eu-north-1:381492175278:db:tgm"
+  
+  channelpostApi:
+    handler: src/API/channel/post.handler
+    name: Channel-post-api
+    description: A lambda handler for posting a channel.
+    timeout: 100
     memorySize: 128
     events:
       - http:
           path: channel
-          method: GET
-      - http:
-          path: channel/{id}
-          method: GET
+          method: POST
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - "rds-data:ExecuteStatement"
+        Resource: "arn:aws:rds-db:eu-north-1:381492175278:db:tgm"
+
+  channelPutChangeApi:
+    handler: src/API/channel/put.handler
+    name: Channel-put-change-api
+    description: A lambda handler for changing details in channel
+    timeout: 100
+    memorySize: 128
+    events:
       - http:
           path: channel
-          method: POST
-      - http:
-          path: channel/{id}
           method: PUT
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - "rds-data:ExecuteStatement"
+        Resource: "arn:aws:rds-db:eu-north-1:381492175278:db:tgm"
+
+  playlistGetApi:
+    handler: src/API/playlist/get.handler
+    name: Playlist-Get-Api
+    description: A lambda handler for getting all the playlists
+    timeout: 100
+    memorySize: 128
+    events:
+      - http:
+          path: playlist
+          method: GET
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - "rds-data:ExecuteStatement"
+        Resource: "arn:aws:rds-db:eu-north-1:381492175278:db:tgm"
+
+  playlistGetSpecificApi:
+    handler: src/API/playlist/getSpecific.handler
+    name: Playlist-Get-Specific-Api
+    description: A lambda handler for getting one users' playlist
+    timeout: 100
+    memorySize: 128
+    events:
+      - http:
+          path: playlist/{userId}
+          method: GET
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - "rds-data:ExecuteStatement"
+        Resource: "arn:aws:rds-db:eu-north-1:381492175278:db:tgm"
+
+  playlistPatchApi:
+    handler: src/API/playlist/patch.handler
+    name: Playlist-Patch-Api
+    description: A lambda handler for patching playlist details.
+    timeout: 100
+    memorySize: 128
+    events:
+      - http:
+          path: playlist/{programId}
+          method: PATCH
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - "rds-data:ExecuteStatement"
+        Resource: "arn:aws:rds-db:eu-north-1:381492175278:db:tgm"
+
+  playlistPostApi:
+    handler: src/API/playlist/post.handler
+    name: Playlist-Post-Api
+    description: A lambda handler for adding new playlist.
+    timeout: 100
+    memorySize: 128
+    events:
+      - http:
+          path: playlist
+          method: POST
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - "rds-data:ExecuteStatement"
+        Resource: "arn:aws:rds-db:eu-north-1:381492175278:db:tgm"
+
+  programGetApi:
+    handler: src/API/program/get.handler
+    name: Playlist-Get-Api
+    description: A lambda handler for getting all programs.
+    timeout: 100
+    memorySize: 128
+    events:
+      - http:
+          path: program
+          method: GET
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - "rds-data:ExecuteStatement"
+        Resource: "arn:aws:rds-db:eu-north-1:381492175278:db:tgm"
+
+  programPatchApi:
+    handler: src/API/program/patch.handler
+    name: Playlist-Patch-Api
+    description: A lambda handler for any change in program details.
+    timeout: 100
+    memorySize: 128
+    events:
+      - http:
+          path: program/{programId}
+          method: PATCH
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - "rds-data:ExecuteStatement"
+        Resource: "arn:aws:rds-db:eu-north-1:381492175278:db:tgm"
+
+  programPostApi:
+    handler: src/API/program/post.handler
+    name: Playlist-post-Api
+    description: A lambda handler for adding a new program .
+    timeout: 100
+    memorySize: 128
+    events:
+      - http:
+          path: program
+          method: POST
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - "rds-data:ExecuteStatement"
+        Resource: "arn:aws:rds-db:eu-north-1:381492175278:db:tgm"
+
+  # channelApi:
+  #   handler: src/API/channelAPI.handler
+  #   name: Channel-api
+  #   description: A lambda handler for channel APIs.
+  #   timeout: 800
+  #   memorySize: 128
+  #   events:
+  #     - http:
+  #         path: channel
+  #         method: GET
+  #     - http:
+  #         path: channel/{id}
+  #         method: GET
+  #     - http:
+  #         path: channel
+  #         method: POST
+  #     - http:
+  #         path: channel/{id}
+  #         method: PUT
       # - http:
       #     path: channel/{id}
       #     method: PATCH

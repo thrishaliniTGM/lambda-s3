@@ -2,10 +2,8 @@ const query  = require('../../components/rdsConnection');
 
 module.exports.handler = async (event) => {
     try {
-        const playlistId = event.pathParameters.playlistId;
         const userId = event.pathParameters.userId;
-
-        const results = await query(`SELECT program.* FROM program JOIN playlist ON program.id = playlist.programId WHERE playlist.id = '${playlistId}' AND playlist.userId = ${userId}`);
+        const results = await query(`SELECT program.* FROM program JOIN playlist ON program.id = playlist.programId WHERE playlist.userId = ${userId}`);
         
         if (results.length === 0) {
             return {

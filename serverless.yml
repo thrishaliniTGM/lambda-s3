@@ -16,91 +16,91 @@ plugins:
   - serverless-iam-roles-per-function
 
 functions:
-  # s3ImageUploader:
-  #   handler: src/upload.handler
-  #   name: s3-Image-uploader
-  #   description: A lambda handler that uploads a file to an S3 bucket based on an API Gateway trigger.
-  #   timeout: 60 
-  #   memorySize: 128 
-  #   events:
-  #     - http:
-  #         path: images
-  #         method: POST
-  #   iamRoleStatements:
-  #     - Effect: Allow
-  #       Action:
-  #         - "s3:Put*"
-  #       Resource: arn:aws:s3:::tgm-general/*
-  #   environment:
-  #     FILE_UPLOAD_BUCKET_NAME: tgm-general
+  s3ImageUploader:
+    handler: src/upload.handler
+    name: s3-Image-uploader
+    description: A lambda handler that uploads a file to an S3 bucket based on an API Gateway trigger.
+    timeout: 60 
+    memorySize: 128 
+    events:
+      - http:
+          path: images
+          method: POST
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - "s3:Put*"
+        Resource: arn:aws:s3:::tgm-general/*
+    environment:
+      FILE_UPLOAD_BUCKET_NAME: tgm-general
 
-  # s3ImageGet:
-  #   handler: src/get.handler
-  #   name: s3-Image-get
-  #   description: A lambda handler that gets a file on an S3 bucket based on an API Gateway trigger.
-  #   timeout: 60 
-  #   memorySize: 128 
-  #   events:
-  #     - http:
-  #         path: images/{imageKey}
-  #         method: GET
-  #   iamRoleStatements:
-  #     - Effect: Allow
-  #       Action:
-  #         - "s3:Get*"
-  #       Resource: arn:aws:s3:::tgm-general/*
-  #   environment:
-  #     FILE_UPLOAD_BUCKET_NAME: tgm-general
+  s3ImageGet:
+    handler: src/get.handler
+    name: s3-Image-get
+    description: A lambda handler that gets a file on an S3 bucket based on an API Gateway trigger.
+    timeout: 60 
+    memorySize: 128 
+    events:
+      - http:
+          path: images/{imageKey}
+          method: GET
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - "s3:Get*"
+        Resource: arn:aws:s3:::tgm-general/*
+    environment:
+      FILE_UPLOAD_BUCKET_NAME: tgm-general
 
-  # s3ImageDelete:
-  #   handler: src/delete.handler
-  #   name: s3-Image-delete
-  #   description: A lambda handler that deletes a file on an S3 bucket based on an API Gateway trigger.
-  #   timeout: 60 
-  #   memorySize: 128 
-  #   events:
-  #     - http:
-  #         path: images/{imageKey}
-  #         method: DELETE
-  #   iamRoleStatements:
-  #     - Effect: Allow
-  #       Action:
-  #         - "s3:DeleteObject"
-  #       Resource: arn:aws:s3:::tgm-general/*
-  #   environment:
-  #     FILE_UPLOAD_BUCKET_NAME: tgm-general
+  s3ImageDelete:
+    handler: src/delete.handler
+    name: s3-Image-delete
+    description: A lambda handler that deletes a file on an S3 bucket based on an API Gateway trigger.
+    timeout: 60 
+    memorySize: 128 
+    events:
+      - http:
+          path: images/{imageKey}
+          method: DELETE
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - "s3:DeleteObject"
+        Resource: arn:aws:s3:::tgm-general/*
+    environment:
+      FILE_UPLOAD_BUCKET_NAME: tgm-general
   
-  # channelGetAllApi:
-  #   handler: src/API/channel/get.handler
-  #   name: Channel-get-All-api
-  #   description: A lambda handler for channel get all channels API.
-  #   timeout: 100
-  #   memorySize: 128
-  #   events:
-  #     - http:
-  #         path: channel
-  #         method: GET
-  #   iamRoleStatements:
-  #     - Effect: Allow
-  #       Action:
-  #         - "rds-data:ExecuteStatement"
-  #       Resource: "arn:aws:rds-db:eu-north-1:381492175278:db:tgm"
+  channelGetAllApi:
+    handler: src/API/channel/get.handler
+    name: Channel-get-All-api
+    description: A lambda handler for channel get all channels API.
+    timeout: 100
+    memorySize: 128
+    events:
+      - http:
+          path: channel
+          method: GET
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - "rds-data:ExecuteStatement"
+        Resource: "arn:aws:rds-db:eu-north-1:381492175278:db:tgm"
 
-  # channelGetSpecificApi:
-  #   handler: src/API/channel/getSpecific.handler
-  #   name: Channel-get-specific-api
-  #   description: A lambda handler for channel get all specific API.
-  #   timeout: 100
-  #   memorySize: 128
-  #   events:
-  #     - http:
-  #         path: channel/{id}
-  #         method: GET
-  #   iamRoleStatements:
-  #     - Effect: Allow
-  #       Action:
-  #         - "rds-data:ExecuteStatement"
-  #       Resource: "arn:aws:rds-db:eu-north-1:381492175278:db:tgm"
+  channelGetSpecificApi:
+    handler: src/API/channel/getSpecific.handler
+    name: Channel-get-specific-api
+    description: A lambda handler for channel get all specific API.
+    timeout: 100
+    memorySize: 128
+    events:
+      - http:
+          path: channel/{id}
+          method: GET
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - "rds-data:ExecuteStatement"
+        Resource: "arn:aws:rds-db:eu-north-1:381492175278:db:tgm"
 
   channelGetSearchApi:
     handler: src/API/channel/search.handler
@@ -169,6 +169,22 @@ functions:
   playlistGetSpecificApi:
     handler: src/API/playlist/getSpecific.handler
     name: Playlist-Get-Specific-Api
+    description: A lambda handler for getting one users' perticular playlist
+    timeout: 100
+    memorySize: 128
+    events:
+      - http:
+          path: playlist/{userId}/{playlistId}
+          method: GET
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - "rds-data:ExecuteStatement"
+        Resource: "arn:aws:rds-db:eu-north-1:381492175278:db:tgm"
+
+  playlistGetSpecificToUserApi:
+    handler: src/API/playlist/getSpecificToUser.handler
+    name: Playlist-Get-Specific-user-Api
     description: A lambda handler for getting one users' playlist
     timeout: 100
     memorySize: 128
@@ -190,7 +206,7 @@ functions:
     memorySize: 128
     events:
       - http:
-          path: playlist/{programId}
+          path: playlist
           method: PATCH
     iamRoleStatements:
       - Effect: Allow
@@ -261,6 +277,17 @@ functions:
         Action:
           - "rds-data:ExecuteStatement"
         Resource: "arn:aws:rds-db:eu-north-1:381492175278:db:tgm"
+
+  OtpGenApi:
+    handler: src/microservices/otp_gen.handler
+    name: oto-gen-api
+    description: Microservice for 2 factor api generation.
+    timeout: 100
+    memorySize: 128
+    events:
+      - http:
+          path: OtpGen/{number}
+          method: GET
 
   # channelApi:
   #   handler: src/API/channelAPI.handler

@@ -2,7 +2,7 @@ const query  = require('../../components/rdsConnection');
 
 module.exports.handler = async (event) => {
     try {
-        const programId = event.body.programId;
+        const programId = event.pathParameters.programId;
 
         const result = await query(`DELETE FROM program WHERE id = '${programId}'`);
        

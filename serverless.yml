@@ -286,7 +286,7 @@ functions:
     memorySize: 128
     events:
       - http:
-          path: program
+          path: program/{programId}
           method: DELETE
     iamRoleStatements:
       - Effect: Allow

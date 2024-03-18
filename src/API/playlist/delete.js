@@ -2,9 +2,10 @@ const query = require('../../components/rdsConnection');
 
 module.exports.handler = async (event) => {
     try {
-        const programId = event.pathParameters.deleteProgramId;
+        const playlistId = event.pathParameters.playlistId;
+        const programId = event.pathParameters.programId;
 
-        const result = await query(`DELETE FROM playlist WHERE programId = '${programId}'`);
+        const result = await query(`DELETE FROM playlist WHERE id = '${playlistId}' AND programId = '${programId}'`);
 
 
         if (result.affectedRows === 0) {

@@ -278,6 +278,22 @@ functions:
           - "rds-data:ExecuteStatement"
         Resource: "arn:aws:rds-db:eu-north-1:381492175278:db:tgm"
 
+  programDeleteApi:
+    handler: src/API/program/delete.handler
+    name: Program-delete-Api
+    description: A lambda handler for deleting a program .
+    timeout: 100
+    memorySize: 128
+    events:
+      - http:
+          path: program
+          method: DELETE
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - "rds-data:ExecuteStatement"
+        Resource: "arn:aws:rds-db:eu-north-1:381492175278:db:tgm"
+
   OtpGenApi:
     handler: src/microservices/otp_gen.handler
     name: oto-gen-api

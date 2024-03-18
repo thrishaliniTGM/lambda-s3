@@ -230,6 +230,21 @@ functions:
           - "rds-data:ExecuteStatement"
         Resource: "arn:aws:rds-db:eu-north-1:381492175278:db:tgm"
 
+  playlistDeleteProgramApi:
+    handler: src/API/playlist/delete.handler
+    name: Playlist-deleteProgram-Api
+    description: A lambda handler for adding deleting a program from playlist.
+    timeout: 100
+    memorySize: 128
+    events:
+      - http:
+          path: playlist/{programId}
+          method: DELETE
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - "rds-data:ExecuteStatement"
+        Resource: "arn:aws:rds-db:eu-north-1:381492175278:db:tgm"
   programGetApi:
     handler: src/API/program/get.handler
     name: Playlist-get-Api

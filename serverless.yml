@@ -238,7 +238,7 @@ functions:
     memorySize: 128
     events:
       - http:
-          path: playlist/{playlistId}/{programId}
+          path: playlist
           method: DELETE
     iamRoleStatements:
       - Effect: Allow

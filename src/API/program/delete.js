@@ -4,7 +4,7 @@ module.exports.handler = async (event) => {
     try {
         const programId = event.body.programId;
 
-        const result = await query(`DELETE FROM program WHERE id = ${programId}`);
+        const result = await query(`DELETE FROM program WHERE id = '${programId}'`);
        
         if (result.affectedRows === 0) {
             return {
